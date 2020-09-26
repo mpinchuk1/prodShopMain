@@ -30,17 +30,17 @@ public class Main {
 
         //get products from DB
         ResponseEntity<ProductsDTO> response2 = restTemplate
-                .exchange(URL + "/getAllProducts", HttpMethod.GET, headersEntity, ProductsDTO.class);
+                .exchange(URL + "/products/getAll", HttpMethod.GET, headersEntity, ProductsDTO.class);
         printProducts(Objects.requireNonNull(response2.getBody()).getProducts());
 
         //filter expired products
         System.out.println("Checking products for expiration");
         ResponseEntity<Void> response3 = restTemplate
-                .exchange(URL + "/filterExpiredProducts", HttpMethod.GET, headersEntity, Void.class);
+                .exchange(URL + "/shop/filterExpiredProducts", HttpMethod.GET, headersEntity, Void.class);
 
         //get products from DB
         response2 = restTemplate
-                .exchange(URL + "/getAllProducts", HttpMethod.GET, headersEntity, ProductsDTO.class);
+                .exchange(URL + "/products/getAll", HttpMethod.GET, headersEntity, ProductsDTO.class);
         List<Product> productsForSale = Objects.requireNonNull(response2.getBody()).getProducts();
         printProducts(productsForSale);
 
@@ -53,23 +53,31 @@ public class Main {
         makeOrder(customer1, seller1, bucketForCustomer1);
 
         System.out.println("Trying to create new order");
-        List<Product> bucketForCustomer2 = new ArrayList<>(productsForSale.subList(0, 2));
+        List<Product> bucketForCustomer2 = new ArrayList<>(productsForSale.subList(2, 4));
         bucketForCustomer2.add(productsForSale.get(5));
         makeOrder(customer2, seller1, bucketForCustomer2);
 
         //get products from DB
         response2 = restTemplate
-                .exchange(URL + "/getAllProducts", HttpMethod.GET, headersEntity, ProductsDTO.class);
+                .exchange(URL + "/products/getAll", HttpMethod.GET, headersEntity, ProductsDTO.class);
         printProducts(Objects.requireNonNull(response2.getBody()).getProducts());
 
         //get customers from DB
         ResponseEntity<CustomersDTO> response4 = restTemplate
-                .exchange(URL + "/getAllCustomers", HttpMethod.GET, headersEntity, CustomersDTO.class);
-        printCustomers(Objects.requireNonNull(response4.getBody()).getCustomers());
+                .exchange(URL + "/customers/getAll", HttpMethod.GET, headersEntity, CustomersDTO.class);
+        System.out.println("___________________________________________" + "\nCustomers: ");
+        for (Customer c : Objects.requireNonNull(response4.getBody()).getCustomers()) {
+            System.out.println(c);
+        }
+        System.out.println("\n___________________________________________");
 
         ResponseEntity<OrdersDTO> response5 = restTemplate
-                .exchange(URL + "/getAllOrders", HttpMethod.GET, headersEntity, OrdersDTO.class);
-        printOrders(Objects.requireNonNull(response5.getBody()).getOrders());
+                .exchange(URL + "/orders/getAll", HttpMethod.GET, headersEntity, OrdersDTO.class);
+        System.out.println("___________________________________________" + "\nOrders: ");
+        for (Order o : Objects.requireNonNull(response5.getBody()).getOrders()) {
+            System.out.println(o);
+        }
+        System.out.println("\n___________________________________________");
     }
 
     private static void makeOrder(Customer customer, Seller seller, List<Product> bucketForCustomer) {
@@ -79,7 +87,7 @@ public class Main {
         createOrderDTO.setProducts(bucketForCustomer);
         HttpEntity<CreateOrderDTO> createOrder = new HttpEntity<>(createOrderDTO);
         ResponseEntity<Void> response4 = restTemplate
-                .exchange(URL + "/createOrder", HttpMethod.POST,
+                .exchange(URL + "/orders/create", HttpMethod.POST,
                         createOrder, Void.class);
     }
 
@@ -104,10 +112,10 @@ public class Main {
         deliveryDTO.setProductQuantities(quantities);
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String deliverJsonStr = gson.toJson(deliveryDTO);
-        System.out.println(deliverJsonStr);
+
         HttpEntity<String> deliverJson = new HttpEntity<>(deliverJsonStr, headers);
         ResponseEntity<Void> response1 = restTemplate
-                .exchange(URL + "/deliverProducts", HttpMethod.POST, deliverJson, Void.class);
+                .exchange(URL + "/supply/deliverProducts", HttpMethod.POST, deliverJson, Void.class);
 
         System.out.println("Delivery by " + courier1.getSupplierCompanyName() + ": \n" + "Courier "
                 + courier1.getLastName() + " has delivered " + deliveryProducts);
@@ -124,28 +132,4 @@ public class Main {
 
         System.out.println(stringBuilder.toString());
     }
-
-    private static void printCustomers(List<Customer> customers) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\n___________________________________________");
-        stringBuilder.append("\nCustomers: ");
-        for (Customer c : customers) {
-            stringBuilder.append("\n").append(c);
-        }
-        stringBuilder.append("\n___________________________________________");
-
-        System.out.println(stringBuilder.toString());
-    }
-
-    private static void printOrders(List<Order> orders) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("___________________________________________").append("\nOrders: ");
-        for (Order o : orders) {
-            stringBuilder.append("\n").append(o);
-        }
-        stringBuilder.append("\n___________________________________________");
-
-        System.out.println(stringBuilder.toString());
-    }
-
 }

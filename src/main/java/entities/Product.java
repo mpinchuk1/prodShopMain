@@ -90,7 +90,6 @@ public class Product {
         return "Product{" +
                 "name='" + name + '\'' +
                 ", price=" + price +
-                ", deliveryDate=" + deliveryDate +
                 ", expireDate=" + expireDate +
                 '}';
     }
