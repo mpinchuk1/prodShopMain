@@ -30,17 +30,17 @@ public class Main {
 
         //get products from DB
         ResponseEntity<ProductsDTO> response2 = restTemplate
-                .exchange(URL + "/products/getAll", HttpMethod.GET, headersEntity, ProductsDTO.class);
+                .exchange(URL + "/products", HttpMethod.GET, headersEntity, ProductsDTO.class);
         printProducts(Objects.requireNonNull(response2.getBody()).getProducts());
 
         //filter expired products
         System.out.println("Checking products for expiration");
         ResponseEntity<Void> response3 = restTemplate
-                .exchange(URL + "/shop/filterExpiredProducts", HttpMethod.GET, headersEntity, Void.class);
+                .exchange(URL + "/shop/filterExpired", HttpMethod.GET, headersEntity, Void.class);
 
         //get products from DB
         response2 = restTemplate
-                .exchange(URL + "/products/getAll", HttpMethod.GET, headersEntity, ProductsDTO.class);
+                .exchange(URL + "/products", HttpMethod.GET, headersEntity, ProductsDTO.class);
         List<Product> productsForSale = Objects.requireNonNull(response2.getBody()).getProducts();
         printProducts(productsForSale);
 
@@ -59,12 +59,12 @@ public class Main {
 
         //get products from DB
         response2 = restTemplate
-                .exchange(URL + "/products/getAll", HttpMethod.GET, headersEntity, ProductsDTO.class);
+                .exchange(URL + "/products", HttpMethod.GET, headersEntity, ProductsDTO.class);
         printProducts(Objects.requireNonNull(response2.getBody()).getProducts());
 
         //get customers from DB
         ResponseEntity<CustomersDTO> response4 = restTemplate
-                .exchange(URL + "/customers/getAll", HttpMethod.GET, headersEntity, CustomersDTO.class);
+                .exchange(URL + "/customers", HttpMethod.GET, headersEntity, CustomersDTO.class);
         System.out.println("___________________________________________" + "\nCustomers: ");
         for (Customer c : Objects.requireNonNull(response4.getBody()).getCustomers()) {
             System.out.println(c);
@@ -72,7 +72,7 @@ public class Main {
         System.out.println("\n___________________________________________");
 
         ResponseEntity<OrdersDTO> response5 = restTemplate
-                .exchange(URL + "/orders/getAll", HttpMethod.GET, headersEntity, OrdersDTO.class);
+                .exchange(URL + "/orders", HttpMethod.GET, headersEntity, OrdersDTO.class);
         System.out.println("___________________________________________" + "\nOrders: ");
         for (Order o : Objects.requireNonNull(response5.getBody()).getOrders()) {
             System.out.println(o);
@@ -87,7 +87,7 @@ public class Main {
         createOrderDTO.setProducts(bucketForCustomer);
         HttpEntity<CreateOrderDTO> createOrder = new HttpEntity<>(createOrderDTO);
         ResponseEntity<Void> response4 = restTemplate
-                .exchange(URL + "/orders/create", HttpMethod.POST,
+                .exchange(URL + "/orders", HttpMethod.POST,
                         createOrder, Void.class);
     }
 
@@ -115,7 +115,7 @@ public class Main {
 
         HttpEntity<String> deliverJson = new HttpEntity<>(deliverJsonStr, headers);
         ResponseEntity<Void> response1 = restTemplate
-                .exchange(URL + "/supply/deliverProducts", HttpMethod.POST, deliverJson, Void.class);
+                .exchange(URL + "/supply", HttpMethod.POST, deliverJson, Void.class);
 
         System.out.println("Delivery by " + courier1.getSupplierCompanyName() + ": \n" + "Courier "
                 + courier1.getLastName() + " has delivered " + deliveryProducts);
