@@ -36,7 +36,7 @@ public class Main {
         //filter expired products
         System.out.println("Checking products for expiration");
         ResponseEntity<Void> response3 = restTemplate
-                .exchange(URL + "/shop/filterExpired", HttpMethod.GET, headersEntity, Void.class);
+                .exchange(URL + "/shop?filter=true", HttpMethod.GET, headersEntity, Void.class);
 
         //get products from DB
         response2 = restTemplate
