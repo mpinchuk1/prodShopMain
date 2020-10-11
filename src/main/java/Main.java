@@ -36,7 +36,7 @@ public class Main {
         //filter expired products
         System.out.println("Checking products for expiration");
         ResponseEntity<Void> response3 = restTemplate
-                .exchange(URL + "/shop?filter=true", HttpMethod.GET, headersEntity, Void.class);
+                .exchange(URL + "/products/filter=true", HttpMethod.GET, headersEntity, Void.class);
 
         //get products from DB
         response2 = restTemplate
@@ -78,6 +78,13 @@ public class Main {
             System.out.println(o);
         }
         System.out.println("\n___________________________________________");
+
+        ResponseEntity<OrderProductsDTO> response6 = restTemplate
+                .exchange(URL + "/orders/orderProducts", HttpMethod.GET, headersEntity, OrderProductsDTO.class);
+        System.out.println("___________________________________________" + "\nOrderProducts: ");
+        for (OrderProduct o : Objects.requireNonNull(response6.getBody()).getOrderProducts()) {
+            System.out.println(o);
+        }
     }
 
     private static void makeOrder(Customer customer, Seller seller, List<Product> bucketForCustomer) {
@@ -93,15 +100,15 @@ public class Main {
 
     public static List<Product> createProductList(Courier courier1) {
 
-        Product p1 = new Product( "water", (double) 20, new Date(2133333423423L), courier1, false);
-        Product p2 = new Product( "apple", (double) 12, new Date(213333), courier1, false);
-        Product p3 = new Product("orange", (double) 34, new Date(2133333423423L), courier1, false);
-        Product p4 = new Product( "cookie", (double) 54, new Date(3333312423423L), courier1, false);
-        Product p5 = new Product( "pill", (double) 212, new Date(2123333423423L), courier1, false);
-        Product p6 = new Product( "bread", (double) 2, new Date(3121333333333L), courier1, false);
-        Product p7 = new Product( "cola", (double) 1111, new Date(1133333333213L), courier1, false);
-        Product p8 = new Product( "bear", (double) 11123121, new Date(1133333333213L), courier1, true);
-        Product p9 = new Product( "vodka", (double) 1, new Date(3133333333213L), courier1, true);
+        Product p1 = new Product( "water", 20d, new Date(2133333423423L), courier1, false);
+        Product p2 = new Product( "apple",12d, new Date(213333), courier1, false);
+        Product p3 = new Product("orange", 34d, new Date(2133333423423L), courier1, false);
+        Product p4 = new Product( "cookie",  54d, new Date(3333312423423L), courier1, false);
+        Product p5 = new Product( "pill",  212d, new Date(2123333423423L), courier1, false);
+        Product p6 = new Product( "bread",  2d, new Date(3121333333333L), courier1, false);
+        Product p7 = new Product( "cola",  1111d, new Date(1133333333213L), courier1, false);
+        Product p8 = new Product( "bear", 11123121d, new Date(1133333333213L), courier1, true);
+        Product p9 = new Product( "vodka",  1d, new Date(3133333333213L), courier1, true);
         return Arrays.asList(p1, p2, p3, p4,p5,p6,p7,p8,p9);
     }
 

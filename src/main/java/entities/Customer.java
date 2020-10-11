@@ -1,56 +1,63 @@
 package entities;
 
-import java.util.Date;
+import java.util.UUID;
 
 
 public class Customer {
 
+    private UUID customerId;
     private String firstName;
     private String lastName;
-    private Integer age;
-    private Date registrationDate;
+    private int age;
 
-    public Customer(){
-
+    public Customer() {
     }
 
-    public Customer( String firstName, String lastName, int age) {
-
+    public Customer(String firstName, String lastName, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        this.registrationDate = new Date();
     }
 
+    public UUID getCustomerId() {
+        return customerId;
+    }
 
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
+    }
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public Date getRegistrationDate() {
-        return registrationDate;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setRegistrationDate(Date registrationDate){
-        this.registrationDate = registrationDate;
-    }
-
-    public Integer getAge() {
+    public int getAge() {
         return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "firstName='" + firstName + '\'' +
+        return "CustomerDTO{" +
+                "customerId=" + customerId +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
-                ", registrationDate=" + registrationDate +
                 '}';
     }
 }
