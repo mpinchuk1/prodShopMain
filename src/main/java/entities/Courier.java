@@ -1,13 +1,9 @@
 package entities;
 
-
-
 public class Courier {
-
 
     private String lastName;
     private String supplierCompanyName;
-
 
     public Courier() {
     }
@@ -26,9 +22,6 @@ public class Courier {
     public String getSupplierCompanyName() {
         return supplierCompanyName;
     }
-
-
-
 
     @Override
     public String toString() {

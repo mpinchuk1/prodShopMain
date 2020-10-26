@@ -1,9 +1,9 @@
 package entities;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.UUID;
 
 
@@ -12,7 +12,9 @@ public class Product {
     private UUID id;
     private String name;
     private Double price;
+    @JsonFormat(pattern = "MMM dd, yyyy")
     private Date deliveryDate;
+    @JsonFormat(pattern = "MMM dd, yyyy")
     private Date expireDate;
     private Courier deliveredBy;
     private Boolean forAdult;
@@ -23,7 +25,7 @@ public class Product {
     public Product(String name, Double price, Date expireDate, Courier deliveredBy, Boolean forAdult) {
         this.name = name;
         this.price = price;
-        this.deliveryDate = new Date();
+        this.deliveryDate = new Date(System.currentTimeMillis());
         this.expireDate = expireDate;
         this.deliveredBy = deliveredBy;
         this.forAdult = forAdult;

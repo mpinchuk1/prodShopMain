@@ -4,7 +4,6 @@ package entities;
 
 public class Seller {
 
-
     private String firstName;
     private String lastName;
 
@@ -16,8 +15,6 @@ public class Seller {
         this.firstName = firstName;
         this.lastName = lastName;
     }
-
-
 
     public String getFirstName() {
         return firstName;
