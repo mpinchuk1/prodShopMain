@@ -19,6 +19,13 @@ public class Customer {
         this.age = age;
     }
 
+    public Customer(UUID id, String firstName, String lastName, int age) {
+        this.customerId = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+    }
+
     public UUID getCustomerId() {
         return customerId;
     }

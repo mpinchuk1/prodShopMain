@@ -6,10 +6,7 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class Main {
@@ -18,52 +15,44 @@ public class Main {
     private static final HttpHeaders headers = new HttpHeaders();
     private static final HttpEntity<Object> headersEntity = new HttpEntity<>(headers);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Courier courier1 = new Courier( "Petrov", "Co company");
+        Courier courier1 = new Courier("Petrov", "Co company");
         List<Product> deliveryProducts = createProductList(courier1);
-        List<Integer> quantities = Arrays.asList(4,5,1,46,2,88,7,22,3);
+        List<Integer> quantities = Arrays.asList(4, 5, 1, 46, 2, 88, 7, 22, 3);
 
-        Seller seller1 = new Seller( "Kolya", "Frolov");
+        Seller seller1 = new Seller("Kolya", "Frolov");
+        Customer customer1 = new Customer(UUID.randomUUID(), "Max", "WEW", 34);
+        Customer customer2 = new Customer(UUID.randomUUID(), "Anton", "WEQQQ", 23);
 
-        //deliver products to shop
+        HttpEntity<Customer> entityForCus1 = new HttpEntity<>(customer1);
+        ResponseEntity<Void> responseForCus1 = restTemplate.exchange(URL + "/customers/mq", HttpMethod.POST,
+                entityForCus1, Void.class);
+
+        HttpEntity<Customer> entityForCus2 = new HttpEntity<>(customer2);
+        ResponseEntity<Void> responseForCus2 = restTemplate.exchange(URL + "/customers/mq", HttpMethod.POST,
+                entityForCus2, Void.class);
+
         deliverProductsToShop(courier1, deliveryProducts, quantities);
+
+        Thread.sleep(5000);
 
         //get products from DB
         ResponseEntity<ProductsDTO> response2 = restTemplate
                 .exchange(URL + "/products", HttpMethod.GET, headersEntity, ProductsDTO.class);
         printProducts(Objects.requireNonNull(response2.getBody()).getProducts());
 
-        //filter expired products
-        System.out.println("Checking products for expiration");
-        ResponseEntity<Void> response3 = restTemplate
-                .exchange(URL + "/products/filter=true", HttpMethod.GET, headersEntity, Void.class);
-
-        //get products from DB
-        response2 = restTemplate
-                .exchange(URL + "/products", HttpMethod.GET, headersEntity, ProductsDTO.class);
-        List<Product> productsForSale = Objects.requireNonNull(response2.getBody()).getProducts();
-        printProducts(productsForSale);
-
-        Customer customer1 = new Customer( "Anton", "Vitas", 20);
-        Customer customer2 = new Customer( "Bad", "Guy", 17);
-
         //creating orders
         System.out.println("Trying to create new order");
-        List<Product> bucketForCustomer1 = new ArrayList<>(productsForSale.subList(0, 2));
+        List<Product> bucketForCustomer1 = new ArrayList<>(deliveryProducts.subList(0, 2));
         makeOrder(customer1, seller1, bucketForCustomer1);
 
         System.out.println("Trying to create new order");
-        List<Product> bucketForCustomer2 = new ArrayList<>(productsForSale.subList(2, 4));
-        bucketForCustomer2.add(productsForSale.get(5));
+        List<Product> bucketForCustomer2 = new ArrayList<>(deliveryProducts.subList(2, 4));
+        bucketForCustomer2.add(deliveryProducts.get(5));
         makeOrder(customer2, seller1, bucketForCustomer2);
-
-        //get products from DB
-        response2 = restTemplate
-                .exchange(URL + "/products", HttpMethod.GET, headersEntity, ProductsDTO.class);
-        printProducts(Objects.requireNonNull(response2.getBody()).getProducts());
 
         //get customers from DB
         ResponseEntity<CustomersDTO> response4 = restTemplate
@@ -97,7 +86,7 @@ public class Main {
         createOrderDTO.setProducts(bucketForCustomer);
         HttpEntity<CreateOrderDTO> createOrder = new HttpEntity<>(createOrderDTO);
         ResponseEntity<Void> response4 = restTemplate
-                .exchange(URL + "/orders", HttpMethod.POST,
+                .exchange(URL + "/orders/mq", HttpMethod.POST,
                         createOrder, Void.class);
     }
 
@@ -125,7 +114,7 @@ public class Main {
 
         HttpEntity<String> deliverJson = new HttpEntity<>(deliverJsonStr, headers);
         ResponseEntity<Void> response1 = restTemplate
-                .exchange(URL + "/supply", HttpMethod.POST, deliverJson, Void.class);
+                .exchange(URL + "/supply/mq", HttpMethod.POST, deliverJson, Void.class);
 
         System.out.println("Delivery by " + courier1.getSupplierCompanyName() + ": \n" + "Courier "
                 + courier1.getLastName() + " has delivered " + deliveryProducts);
