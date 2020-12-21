@@ -1,7 +1,5 @@
 package entities;
 
-
-
 public class Seller {
 
     private String firstName;

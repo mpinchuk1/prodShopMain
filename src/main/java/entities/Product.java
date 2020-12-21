@@ -22,6 +22,11 @@ public class Product {
     public Product() {
     }
 
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
     public Product(String name, Double price, Date expireDate, Courier deliveredBy, Boolean forAdult) {
         this.name = name;
         this.price = price;

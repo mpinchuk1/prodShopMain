@@ -17,6 +17,12 @@ public class Order {
     public Order() {
     }
 
+    public Order(UUID id, UUID customerId, Double price) {
+        this.id = id;
+        this.customerId = customerId;
+        this.price = price;
+    }
+
     public UUID getId() {
         return id;
     }

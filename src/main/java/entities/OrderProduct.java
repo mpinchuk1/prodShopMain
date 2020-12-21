@@ -12,6 +12,11 @@ public class OrderProduct {
     public OrderProduct() {
     }
 
+    public OrderProduct(UUID orderId, UUID productId) {
+        this.orderId = orderId;
+        this.productId = productId;
+    }
+
     public UUID getId() {
         return id;
     }
